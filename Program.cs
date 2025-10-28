@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,55 +32,30 @@ Console.WriteLine("Hello, World!");
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+=======
+﻿using Microsoft.AspNetCore.Builder;
+>>>>>>> 4a248c5 (New Controllers and Services Added)
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
-public class Program
-{
-    // FIX: Make the fields nullable with a '?' because they are not set in the constructor.
-    private DiscordSocketClient? _client;
-    private IConfiguration? _configuration;
+var builder = WebApplication.CreateBuilder(args);
 
-    public static void Main(string[] args)
-        => new Program().MainAsync().GetAwaiter().GetResult();
+builder.Configuration.AddUserSecrets<Program>();
 
-    public async Task MainAsync()
-    {
-        _configuration = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddUserSecrets<Program>()
-            .Build();
+builder.Services.AddControllers();
 
-        // FIX: The compiler warns that the return value might be null.
-        // string.IsNullOrEmpty already handles this perfectly, so no change is needed here.
-        string? discordToken = _configuration["Discord:Token"];
-        if (string.IsNullOrEmpty(discordToken))
-        {
-            LogFatal("Discord:Token is missing. Set it with 'dotnet user-secrets set \"Discord:Token\" \"your_token\"'");
-            return;
-        }
-        
-        // FIX: The compiler warns that this value could be null.
-        string? channelIdString = _configuration["Discord:ChannelId"];
-        if (string.IsNullOrEmpty(channelIdString) || channelIdString == "0")
-        {
-            LogFatal("Discord:ChannelId is not set in appsettings.json. Please set it to your target channel's ID.");
-            return;
-        }
+builder.Services.AddSingleton<BridgeService>();
 
-        var config = new DiscordSocketConfig
-        {
-            GatewayIntents = GatewayIntents.AllUnprivileged | GatewayIntents.MessageContent | GatewayIntents.GuildMembers
-        };
+// Renamed from DiscordBotService to DCBotService
+builder.Services.AddHostedService<DCBotService>();
 
-        _client = new DiscordSocketClient(config);
 
-        _client.Log += Log;
-        _client.MessageReceived += MessageReceivedAsync;
-        _client.Ready += OnReady;
+var app = builder.Build();
 
-        await _client.LoginAsync(TokenType.Bot, discordToken);
-        await _client.StartAsync();
+app.UseAuthorization();
+app.MapControllers();
 
+<<<<<<< HEAD
         await Task.Delay(-1);
     }
 
@@ -125,3 +101,6 @@ public class Program
     }
 }
 >>>>>>> 1ae2f63 (Initial Setup for the project)
+=======
+app.Run();
+>>>>>>> 4a248c5 (New Controllers and Services Added)

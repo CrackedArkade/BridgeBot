@@ -1,8 +1,12 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 =======
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 >>>>>>> 8a62d22 (Initial commit: New .NET project with gitignore)
+=======
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+>>>>>>> 4a248c5 (New Controllers and Services Added)
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
