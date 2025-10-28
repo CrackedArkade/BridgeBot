@@ -10,7 +10,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddSingleton<BridgeService>();
 
-// Renamed from DiscordBotService to DCBotService
+
 builder.Services.AddHostedService<DCBotService>();
 
 

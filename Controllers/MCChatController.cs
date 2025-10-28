@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
 [Route("api/minecraft-chat")]
-// Renamed class from MinecraftChatController
+
 public class MCChatController : ControllerBase
 {
     private readonly BridgeService _bridge;
 
-    // Renamed constructor
+
     public MCChatController(BridgeService bridge)
     {
         _bridge = bridge;
@@ -41,7 +41,7 @@ public class MCChatController : ControllerBase
     }
 }
 
-// This class can stay here as it's only used by this controller.
+
 public class MinecraftMessage
 {
     public string PlayerName { get; set; } = string.Empty;
