@@ -93,8 +93,8 @@ private async Task OnMessageReceived(SocketMessage message)
     // Get the channel ID from our configuration file.
     ulong targetChannelId = ulong.Parse(_configuration["Discord:ChannelId"]!);
     
-    // Check if the message was sent in the specific channel we're monitoring.
-//    if (message.Channel.Id != targetChannelId) return;
+
+   if (message.Channel.Id != targetChannelId) return;
 
     // --- PING COMMAND LOGIC ---
     // Check if the message is exactly "!ping".
