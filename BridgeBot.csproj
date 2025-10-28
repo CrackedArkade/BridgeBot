@@ -10,12 +10,18 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1ae2f63 (Initial Setup for the project)
     <UserSecretsId>b1a3ce60-dcd4-4985-a22b-02ab62c34f22</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="3.18.0" />
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1ae2f63 (Initial Setup for the project)
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.10" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.10" />
   </ItemGroup>
