@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="Discord.Net" Version="3.18.0" />
+<<<<<<< HEAD
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="9.0.10" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.10" />
   </ItemGroup>
@@ -29,4 +30,8 @@
   </PropertyGroup>
 
 >>>>>>> 8a62d22 (Initial commit: New .NET project with gitignore)
+=======
+  </ItemGroup>
+
+>>>>>>> e25d6ba (Add Discord.Net package)
 </Project>
