@@ -14,6 +14,7 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<BridgeService>();
 
 
+<<<<<<< HEAD
 builder.Services.AddHostedService<DCBotService>();
 
 
@@ -47,6 +48,8 @@ builder.Services.AddControllers();
 builder.Services.AddSingleton<BridgeService>();
 
 // Renamed from DiscordBotService to DCBotService
+=======
+>>>>>>> 68f5609 (Updates to the code (Readded !ping functionality and other changes))
 builder.Services.AddHostedService<DCBotService>();
 
 
