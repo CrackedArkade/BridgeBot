@@ -40,30 +40,25 @@ public class DCBotService : IHostedService
 
 private async Task OnMessageReceived(SocketMessage message)
 {
-    // Ignore any messages sent by bots (including our own).
+
     if (message.Author.IsBot) return;
 
-    // Get the channel ID from our configuration file.
+
     ulong targetChannelId = ulong.Parse(_configuration["Discord:ChannelId"]!);
     
 
    if (message.Channel.Id != targetChannelId) return;
 
-    // --- PING COMMAND LOGIC ---
-    // Check if the message is exactly "!ping".
+
     if (message.Content == "!ping")
     {
-        // If it is, reply to the same channel with "Pong!"
+
         await message.Channel.SendMessageAsync("Pong!");
         
-        // Use 'return' to stop processing. We don't want to send "!ping" to Minecraft.
+
         return;
     }
-    // --- END OF PING COMMAND LOGIC ---
 
-
-    // If the message was NOT "!ping", then it must be a chat message for Minecraft.
-    // Add the message to the queue for the Aternos server to pick up later.
     string dcToMc = $"[Discord] {message.Author.Username}: {message.Content}";
     
     _bridge.ToMinecraftQueue.Enqueue(dcToMc);
