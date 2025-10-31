@@ -32,7 +32,7 @@ public class MCChatController : ControllerBase
     [HttpGet]
     public IActionResult GetToMinecraft()
     {
-        var messages = new List<string>();
+        var messages = new List<DiscordMessageInfo>();
         while (_bridge.ToMinecraftQueue.TryDequeue(out var message))
         {
             messages.Add(message);

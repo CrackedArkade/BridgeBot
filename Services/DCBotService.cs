@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
@@ -38,31 +39,54 @@ public class DCBotService : IHostedService
         _bridge.SetDiscordClient(_client);
     }
 
-private async Task OnMessageReceived(SocketMessage message)
-{
-
-    if (message.Author.IsBot) return;
-
-
-    ulong targetChannelId = ulong.Parse(_configuration["Discord:ChannelId"]!);
-    
-
-   if (message.Channel.Id != targetChannelId) return;
-
-
-    if (message.Content == "!ping")
+    private Task OnMessageReceived(SocketMessage message)
     {
 
-        await message.Channel.SendMessageAsync("Pong!");
-        
+        if (message.Author.IsBot) return Task.CompletedTask;
 
-        return;
-    }
+        ulong targetChannelId = ulong.Parse(_configuration["Discord:ChannelId"]!);
 
-    string dcToMc = $"[Discord] {message.Author.Username}: {message.Content}";
+
+        if (message.Channel.Id != targetChannelId) return Task.CompletedTask;
+
+
+        if (message.Content == "!ping")
+        {
+
+            message.Channel.SendMessageAsync("Pong!");
+
+
+            return Task.CompletedTask;
+        }
+
+        string userHexColor = "#FFFFFF";
+        string authorName = message.Author.Username;
+        if (message.Author is SocketGuildUser guildUser)
+        {
+            authorName = guildUser.DisplayName;
+
+            var userColor = guildUser.Roles
+                .Where(role => role.Color.RawValue != 0)
+                .OrderByDescending(role => role.Position)
+                .FirstOrDefault()?.Color;
+
+            if (userColor.HasValue)
+            {
+                userHexColor = $"#{userColor.Value.R:X2}{userColor.Value.G:X2}{userColor.Value.B:X2}";
+            }
+        }
+
+        var messageInfo = new DiscordMessageInfo
+        {
+            Author = authorName,
+            Content = message.Content,
+            HexColor = userHexColor
+        };
+
+        _bridge.ToMinecraftQueue.Enqueue(messageInfo);
+        return Task.CompletedTask;
     
-    _bridge.ToMinecraftQueue.Enqueue(dcToMc);
-}
+    }
 
     public async Task StopAsync(CancellationToken cancellationToken)
     {

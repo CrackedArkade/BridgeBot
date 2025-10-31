@@ -3,9 +3,16 @@ using System.Threading.Tasks;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 
+
+public class DiscordMessageInfo
+{
+    public string Author { get; set; } = string.Empty;
+    public string Content { get; set; } = string.Empty;
+    public string HexColor { get; set; } = "#FFFFFF";
+}
 public class BridgeService
 {
-    public ConcurrentQueue<string> ToMinecraftQueue { get; } = new();
+    public ConcurrentQueue<DiscordMessageInfo> ToMinecraftQueue { get; } = new();
     private DiscordSocketClient? _discordClient;
     private readonly IConfiguration _configuration;
 
