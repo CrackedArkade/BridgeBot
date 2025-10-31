@@ -13,6 +13,8 @@ public class DiscordMessageInfo
 public class BridgeService
 {
     public ConcurrentQueue<DiscordMessageInfo> ToMinecraftQueue { get; } = new();
+
+    public ConcurrentQueue<SoundRequest> ToMinecraftSoundQueue { get; } = new();
     private DiscordSocketClient? _discordClient;
     private readonly IConfiguration _configuration;
 
