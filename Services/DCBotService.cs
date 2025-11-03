@@ -52,7 +52,6 @@ public class DCBotService : IHostedService
             .WithName("playsound")
             .WithDescription("Plays a sound effect for a player in Minecraft.")
             .AddOption("player", ApplicationCommandOptionType.String, "The in-game name of the player.", isRequired: true);
-
         var soundOption = new SlashCommandOptionBuilder()
             .WithName("sound")
             .WithDescription("The sound effect to play.")
@@ -63,25 +62,56 @@ public class DCBotService : IHostedService
             .AddChoice("Level Up", "ENTITY_PLAYER_LEVELUP")
             .AddChoice("Ghast Scream", "ENTITY_GHAST_SCREAM")
             .AddChoice("Villager No", "ENTITY_VILLAGER_NO")
-            .AddChoice("Anvil Land", "BLOCK_ANVIL_LAND");
-
+            .AddChoice("Anvil Land", "BLOCK_ANVIL_LAND")
+            .AddChoice("Wither Spawn", "ENTITY_WITHER_SPAWN")
+            .AddChoice("Ender Dragon Death", "ENTITY_ENDER_DRAGON_DEATH")
+            .AddChoice("End Portal Open", "BLOCK_END_PORTAL_SPAWN")
+            .AddChoice("Raid Horn", "EVENT_RAID_HORN")
+            .AddChoice("Bell Ring", "BLOCK_BELL_USE");
         playSoundCommand.AddOption(soundOption);
-
+        
+        var serverSoundCommand = new SlashCommandBuilder()
+            .WithName("playserversound")
+            .WithDescription("Plays a sound effect for everyone on the server.");
+        var serverSoundOption = new SlashCommandOptionBuilder()
+            .WithName("sound")
+            .WithDescription("The server-wide sound effect to play.")
+            .WithRequired(true)
+            .WithType(ApplicationCommandOptionType.String)
+            .AddChoice("Creeper Hiss", "ENTITY_CREEPER_PRIMED")
+            .AddChoice("Zombie Groan", "ENTITY_ZOMBIE_AMBIENT")
+            .AddChoice("Level Up", "ENTITY_PLAYER_LEVELUP")
+            .AddChoice("Ghast Scream", "ENTITY_GHAST_SCREAM")
+            .AddChoice("Villager No", "ENTITY_VILLAGER_NO")
+            .AddChoice("Anvil Land", "BLOCK_ANVIL_LAND")
+            .AddChoice("Wither Spawn", "ENTITY_WITHER_SPAWN")
+            .AddChoice("Ender Dragon Death", "ENTITY_ENDER_DRAGON_DEATH")
+            .AddChoice("End Portal Open", "BLOCK_END_PORTAL_SPAWN")
+            .AddChoice("Raid Horn", "EVENT_RAID_HORN")
+            .AddChoice("Bell Ring", "BLOCK_BELL_USE");
+        serverSoundCommand.AddOption(serverSoundOption);
         try
+
         {
-            await _client.CreateGlobalApplicationCommandAsync(playSoundCommand.Build());
-            Console.WriteLine("Successfully registered the /playsound command.");
+            var commands = new List<
+            ApplicationCommandProperties>
+        {
+            playSoundCommand.Build(),
+            serverSoundCommand.Build()
+        };
+
+            await _client.BulkOverwriteGlobalApplicationCommandsAsync(commands.ToArray());
+            Console.WriteLine("Successfully registered global commands.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error registering command: {ex.Message}");
+            Console.WriteLine($"Error registering commands: {ex.Message}");
         }
-    }
+}
     private async Task SlashCommandHandler(SocketSlashCommand command)
 
     {
         if (command.Data.Name == "playsound")
-
         {
             string playerName = (string)command.Data.Options.First(o => o.Name == "player").Value;
             string soundName = (string)command.Data.Options.First(o => o.Name == "sound").Value;
@@ -92,6 +122,19 @@ public class DCBotService : IHostedService
             };
             _bridge.ToMinecraftSoundQueue.Enqueue(soundRequest);
             await command.RespondAsync($"Sent the '{soundName}' sound to '{playerName}'!", ephemeral: true);
+        }
+
+        else if (command.Data.Name == "playserversound")
+        {
+            string soundName = (string)command.Data.Options.First().Value;
+            var soundRequest = new SoundRequest
+            {
+                PlayerName = "@a",
+                SoundName = soundName
+            };
+
+            _bridge.ToMinecraftSoundQueue.Enqueue(soundRequest);
+            await command.RespondAsync($"Sent the server-wide '{soundName}' sound to all players!", ephemeral: true);
         }
     }
 
