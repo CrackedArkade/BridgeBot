@@ -7,6 +7,7 @@ using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.Marshalling;
 
 
 public class DCBotService : IHostedService
@@ -45,23 +46,26 @@ public class DCBotService : IHostedService
         _bridge.SetDiscordClient(_client);
     }
 
-    public async Task Client_Ready()
+     public async Task Client_Ready()
     {
-        var soundChoices = new List<ApplicationCommandOptionChoiceProperties>
-        {
-            new ApplicationCommandOptionChoiceProperties() { Name = "Creeper Hiss", Value = "ENTITY_CREEPER_PRIMED" },
-            new ApplicationCommandOptionChoiceProperties() { Name = "Zombie Groan", Value = "ENTITY_ZOMBIE_AMBIENT" },
-            new ApplicationCommandOptionChoiceProperties() { Name = "Level Up", Value = "ENTITY_PLAYER_LEVELUP" },
-            new ApplicationCommandOptionChoiceProperties() { Name = "Ghast Scream", Value = "ENTITY_GHAST_SCREAM" },
-            new ApplicationCommandOptionChoiceProperties() { Name = "Villager No", Value = "ENTITY_VILLAGER_NO" },
-            new ApplicationCommandOptionChoiceProperties() { Name = "Anvil Land", Value = "BLOCK_ANVIL_LAND" }
-        };
-
         var playSoundCommand = new SlashCommandBuilder()
             .WithName("playsound")
-            .WithDescription("Play a Minecraft sound effect.")
-            .AddOption("player", ApplicationCommandOptionType.String, "The player to hear the sound.", isRequired: true)
-            .AddOption("sound", ApplicationCommandOptionType.String, "The sound effect to play.", isRequired: true, choices: soundChoices);
+            .WithDescription("Plays a sound effect for a player in Minecraft.")
+            .AddOption("player", ApplicationCommandOptionType.String, "The in-game name of the player.", isRequired: true);
+
+        var soundOption = new SlashCommandOptionBuilder()
+            .WithName("sound")
+            .WithDescription("The sound effect to play.")
+            .WithRequired(true)
+            .WithType(ApplicationCommandOptionType.String)
+            .AddChoice("Creeper Hiss", "ENTITY_CREEPER_PRIMED")
+            .AddChoice("Zombie Groan", "ENTITY_ZOMBIE_AMBIENT")
+            .AddChoice("Level Up", "ENTITY_PLAYER_LEVELUP")
+            .AddChoice("Ghast Scream", "ENTITY_GHAST_SCREAM")
+            .AddChoice("Villager No", "ENTITY_VILLAGER_NO")
+            .AddChoice("Anvil Land", "BLOCK_ANVIL_LAND");
+
+        playSoundCommand.AddOption(soundOption);
 
         try
         {
